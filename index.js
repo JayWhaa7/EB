@@ -1,16 +1,15 @@
 const { Client, GatewayIntentBits, EmbedBuilder, ActivityType } = require('discord.js');
 const http = require('http');
 
-// This forces Render to stay connected to your cron pings
+// Server setup so hosting platforms stay happy
 const server = http.createServer((req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/plain' });
     res.end('Elite Bot is awake!');
 });
 
-// Render gives you process.env.PORT automatically. We MUST use it.
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-    console.log(`Listening for pings on port ${PORT}`);
+    console.log(`Server listening on port ${PORT}`);
 });
 
 const client = new Client({
