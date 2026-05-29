@@ -1,19 +1,12 @@
 const { Client, GatewayIntentBits, EmbedBuilder, ActivityType } = require('discord.js');
-const express = require('express');
+const http = require('http');
 
-// 1. Initialize Express Web Server for Render/Cron-job
-const app = express();
-const PORT = process.env.PORT || 3000;
+// Simple web hook to satisfy Render's port binding requirement
+http.createServer((req, res) => {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('Elite Bot Active');
+}).listen(process.env.PORT || 3000);
 
-app.get('/', (req, res) => {
-    res.send('Elite Bot is Online and Running 24/7!');
-});
-
-app.listen(PORT, () => {
-    console.log(`Web server is listening on port ${PORT}`);
-});
-
-// 2. Initialize Discord Bot
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
@@ -26,8 +19,6 @@ const PREFIX = '.';
 
 client.once('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
-    
-    // Set Bot Activity Status
     client.user.setActivity('Elite On Top', { type: ActivityType.Playing });
 });
 
@@ -37,7 +28,6 @@ client.on('messageCreate', async (message) => {
     const args = message.content.slice(PREFIX.length).trim().split(/ +/);
     const command = args.shift().toLowerCase();
 
-    // --- Price Command ---
     if (command === 'price') {
         const lowAccessId = '1426432894980853780';
         const fullAccessId = '1426432587618058261';
@@ -62,11 +52,9 @@ client.on('messageCreate', async (message) => {
         await message.channel.send({ embeds: [priceEmbed] });
     }
 
-    // --- Link Command ---
     if (command === 'link') {
         await message.channel.send('https://venmo.com/u/tua_sigma2031');
     }
 });
 
-// Login using the environment variable on Render
 client.login(process.env.DISCORD_TOKEN);
