@@ -1,3 +1,11 @@
+// Replace your old http.createServer block with this:
+http.createServer((req, res) => {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.write("Bot is running!");
+    res.end();
+}).listen(process.env.PORT || 3000, () => {
+    console.log("Web server listening for cron pings.");
+});
 const { Client, GatewayIntentBits, EmbedBuilder, ActivityType } = require('discord.js');
 const http = require('http');
 
